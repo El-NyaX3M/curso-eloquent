@@ -13,7 +13,16 @@ return new class extends Migration
     {
         Schema::create('flights', function (Blueprint $table) {
             $table->id();
+            $table->string('name', 64);
+            $table->string('number');
+            $table->integer('legs');
+            $table->integer('active');
+            $table->integer('departed');
+            $table->dateTime('arrived_at');
+            $table->unsignedBigInteger('destination_id');
             $table->timestamps();
+
+            $table->foreign('destination_id')->references('id')->on('destinations');
         });
     }
 
