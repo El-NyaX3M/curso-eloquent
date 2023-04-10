@@ -58,3 +58,37 @@ Route::get('/prueba', function(){
                                     ->limit(1)
     ])->get();
 });
+
+Route::get('/prueba2', function(){
+    $flight = Flight::find(6); //trae un registro individual a través del id.
+    $flight = Flight::firstWhere('departed', true); //obtiene el primer registro que cumpla con el filtro.
+    $flight = Flight::findOr(6, function(){
+        return 'No existe el vuelo.';
+    }); //obtiene un registro que cumpla con el id indicado, en caso de no encontrarlo se ejecuta la función.
+    $flight = Flight::where('legs', '>', 5)->firstOr(function(){
+        return "No se encontró el vuelo.";
+    }); //obtiene el primer registro que cumpla con el filtro, en caso de no encontrarlo se ejecuta la función.
+    //También es posible agregar una excepción con firstOrFail() y findOrFail(), donde si no existe entonces falla.
+
+    $destination = Destination::firstOrCreate([
+        'name' => 'lmao'
+    ]);//encuentra un registro que cumpla con la propiedad y valor indicada, en caso contrario crea un nuevo registro.
+
+    $flight = Flight::firstOrCreate([
+        'name' => 'Nombre' //este es el filtro.
+    ], [
+        //aquí van las demás propiedades que servirán para crear un nuevo registro en caso de no encontrar uno que cumpla con el filtro. 
+    ]);
+
+    $flight = Flight::firstOrNew([
+        'name' => 'Nombre' //este es el filtro.
+    ], [
+        //aquí van las demás propiedades que servirán para crear una nueva instancia del modelo si no se encuentra un registro que cumpla con el filtro.
+    ]);
+    $flight->save(); //a diferencia del firstOrCreate(), el firstOrNew() crea una instancia la cual puede modificarse antes de subirse a la base de datos.
+
+    $flight = Flight::where('departed', true)->count(); //cuenta la cantidad de registros que cumplen con el filtro.
+    $flight = Flight::where('departed', true)->sum('legs'); //verifica los registros que cumplan con el filtro y con ellos hace una sumatoria con los valores de la propiedad indicada.
+    $flight = Flight::where('departed', true)->max('legs'); //verifica los registros que cumplan con el filtro y con ellos obtiene el valor más alto de acuerdo a la propiedad indicada.
+    $flight = Flight::where('departed', true)->avg('legs'); //verifica los registros que cumplan con el filtro y con ellos obtiene el promedio de los valores de la propiedad indicada.
+});

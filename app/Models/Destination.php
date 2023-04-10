@@ -9,6 +9,9 @@ class Destination extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+    ];
     //protected $table = "list_destinations";       Cambia la tabla que administrará este modelo.
 
     //protected $primaryKey = "identificador";      Cambia la llave primaria.
