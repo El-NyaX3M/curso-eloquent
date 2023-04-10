@@ -19,6 +19,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//RECUPERACIÓN DE MODELOS ----------------------------------
 Route::get('/prueba', function(){
     $flights = Flight::all(); //obtiene todos los registros de la tabla Flight.
     $flights = Flight::where('active', 1)
@@ -59,6 +60,7 @@ Route::get('/prueba', function(){
     ])->get();
 });
 
+//RECUPERACIÓN DE MODELOS INDIVIDUALES ---------------------------
 Route::get('/prueba2', function(){
     $flight = Flight::find(6); //trae un registro individual a través del id.
     $flight = Flight::firstWhere('departed', true); //obtiene el primer registro que cumpla con el filtro.
@@ -91,4 +93,32 @@ Route::get('/prueba2', function(){
     $flight = Flight::where('departed', true)->sum('legs'); //verifica los registros que cumplan con el filtro y con ellos hace una sumatoria con los valores de la propiedad indicada.
     $flight = Flight::where('departed', true)->max('legs'); //verifica los registros que cumplan con el filtro y con ellos obtiene el valor más alto de acuerdo a la propiedad indicada.
     $flight = Flight::where('departed', true)->avg('legs'); //verifica los registros que cumplan con el filtro y con ellos obtiene el promedio de los valores de la propiedad indicada.
+});
+
+//INSERCIÓN Y ACTUALIZACIÓN DE MODELOS ----------------------------
+Route::get('/prueba3', function(){
+    $destination = new Destination(); //crea una nueva instancia del modelo Destination.
+    $destination->name = 'repollo'; //se ingresan los valores de las propiedades deseadas.
+    $destination->save(); //almacena la instancia en la base de datos.
+    
+    $destination = Destination::find(12); //obtiene el registro cuyo id coincida con el indicado.
+    $destination->name = 'rechicken'; //al haber recibido un registro, esto cuenta como modificación del valor de una propiedad.
+    $destination->save(); //almacena la instancia en la base de datos.
+    $destination->update(); //actualiza el registro en la base de datos
+
+    $data = [
+        'name' => 'flight 1',
+        'number' => '123',
+        // etc
+    ];
+    $flight = Flight::create($data); //crea un objeto con las propiedades especificadas en la variable ingresada.
+
+    $flight = Flight::updateOrCreate([
+        'name' => 'pamplinas', //este es el filtro.
+    ], [
+        'number' => '666',
+        'legs' => 1,
+        //aquí van las propiedades a actualizar junto a su nuevo valor.
+    ]); //encuentra un registro con el filtro indicado y le actualiza las propiedades, en caso de no encontrar incidencias entonces crea un nuevo registro con todos los valores ingresados.
+
 });
