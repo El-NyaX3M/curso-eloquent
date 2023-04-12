@@ -20,9 +20,10 @@ return new class extends Migration
             $table->integer('departed');
             $table->dateTime('arrived_at');
             $table->unsignedBigInteger('destination_id');
+            $table->softDeletes('deleted_at');//esto guarda la fecha de cuando se borró el registro.
             $table->timestamps();
 
-            $table->foreign('destination_id')->references('id')->on('destinations');
+            $table->foreignId('destination_id')->references('id')->on('destinations');
         });
     }
 

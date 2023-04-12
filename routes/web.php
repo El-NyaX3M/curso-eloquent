@@ -122,3 +122,23 @@ Route::get('/prueba3', function(){
     ]); //encuentra un registro con el filtro indicado y le actualiza las propiedades, en caso de no encontrar incidencias entonces crea un nuevo registro con todos los valores ingresados.
 
 });
+
+Route::get('prueba4', function(){
+    $flight = Flight::find(10);
+    $flight->delete(); //Elimina el registro de la base de datos.
+
+    Flight::destroy(10); //Elimina el registro con el id indicado.
+
+    Flight::truncate(); //Eliminar todos los registros y reinicia el conteo de id.
+
+    Flight::where('active', 0)->delete(); //elimina los registros que coincidan con el filtro.
+
+    $flight = Flight::orderBy('id', 'desc')->withTrashed()->get(); //obtiene todos los registros ordenados, incluidos que fueron eliminados.
+    $flight = Flight::orderBy('id', 'desc')->onlyTrashed()->get(); //obtiene todos los registrso ordenados, pero solamente aquellos eliminados.
+
+    Flight::where('id', 10)->onlyTrashed()->restore(); //restaura el registro eliminado.
+    Flight::where('id', 10)->onlyTrashed()->forceDelete(); //elimina permanentemente el registro.
+
+    $flight = Flight::where('id', 10)->withTrashed()->first();
+    $flight->trashed(); //verifica si el registro está en la papelera.
+});
