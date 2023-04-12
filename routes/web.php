@@ -123,7 +123,8 @@ Route::get('/prueba3', function(){
 
 });
 
-Route::get('prueba4', function(){
+//ELIMINACIÓN DE MODELOS ---------------------------------------------
+Route::get('/prueba4', function(){
     $flight = Flight::find(10);
     $flight->delete(); //Elimina el registro de la base de datos.
 

@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Prunable;
+use Illuminate\Support\Facades\Storage;
 
 class Flight extends Model
 {
     use HasFactory;
-    use SoftDeletes;
+    use SoftDeletes; //permite borrar registros y queden en una papelera.
+    use Prunable; //programa 
 
     protected $fillable = [ // se especifícan las propiedades que pueden ser afectadas por la asignación masiva.
         'name',
@@ -25,4 +28,12 @@ class Flight extends Model
     protected $guarded = [ // se especifican las propiedades que no pueden ser afectados por asignación masiva.
         'is_admin',
     ];
+
+    public function prunable(){
+        return static::where('departed', true);
+    }
+
+    public function pruning(){
+        Storage::delete($this->image_url); //elimina los recursos.
+    }//se ejecuta antes que prunable
 }
