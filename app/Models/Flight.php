@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Scopes\notDeparted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Prunable;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Builder;
 
 class Flight extends Model
 {
@@ -36,4 +38,18 @@ class Flight extends Model
     public function pruning(){
         Storage::delete($this->image_url); //elimina los recursos.
     }//se ejecuta antes que prunable
+
+    protected static function booted(){
+        static::addGlobalScope('not_departed', function(){});
+        static::addGlobalScope(new NotDeparted); //cada vez que eloquent haga una consulta agregará los filtros dentro de la clase.
+    }
+
+    public function scopeActivo($query){
+        $query->where('active', true);
+    }
+
+    public function scopeLegs($query, $number){
+        $query->where('legs', $number);
+    }
 }
+

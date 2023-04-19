@@ -2,6 +2,7 @@
 
 use App\Models\Flight;
 use App\Models\Destination;
+use App\Scopes\NotDeparted;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -142,4 +143,15 @@ Route::get('/prueba4', function(){
 
     $flight = Flight::where('id', 10)->withTrashed()->first();
     $flight->trashed(); //verifica si el registro está en la papelera.
+});
+
+//QUERY SCOPES ---------------------------------------------------
+Route::get('/prueba5', function(){
+    Flight::all(); //al ejecutar esto, también se añadirán los filtros en la función booted.
+    Flight::withoutGlobalScope(NotDeparted::class)->get(); //permite realizar la consulta sin el filtro indicado (en clase)
+    Flight::withoutGlobalScopes([NotDeparted::class])->get(); //permite realizar la consulta sin los filtros indicados en el arreglo.
+    Flight::withoutGlobalScope('not_departed')->get(); //en caso de no contar con un archivo aparte, se indica el nombre de la función.
+
+    Flight::active()->get(); //el scope local es llamado omitiendo la parte scope del nombre. (véase Flight.php)
+    Flight::legs(4)->get(); 
 });
