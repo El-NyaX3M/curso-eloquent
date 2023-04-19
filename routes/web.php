@@ -155,3 +155,7 @@ Route::get('/prueba5', function(){
     Flight::active()->get(); //el scope local es llamado omitiendo la parte scope del nombre. (véase Flight.php)
     Flight::legs(4)->get(); 
 });
+
+Route::get('/prueba6', function(){
+Flight::create(/*[propiedades van aquí]*/); //en caso de que se omita alguna propiedad, el observer correspondiente se encarga de llenarlo antes.
+});
